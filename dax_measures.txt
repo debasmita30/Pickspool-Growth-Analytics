@@ -1,0 +1,66 @@
+// =====================================================================
+// Pickspool Growth Analytics — DAX measures (paste into Power BI)
+// Tables: pickspool_users, pickspool_events, pickspool_funnel_stages
+// =====================================================================
+
+// ---------- Funnel / activation ----------
+Total Signups = DISTINCTCOUNT ( pickspool_users[user_id] )
+
+Onboarded Users =
+CALCULATE ( [Total Signups], pickspool_users[onboarding_completed] = TRUE() )
+
+Activated Users =                       // posted first opinion
+CALCULATE ( [Total Signups], pickspool_users[first_opinion_posted] = TRUE() )
+
+Retained W1 Users =
+CALCULATE ( [Total Signups], pickspool_users[active_week_1] = TRUE() )
+
+Activation Rate % =
+DIVIDE ( [Activated Users], [Total Signups] )
+
+Onboarding Rate % =
+DIVIDE ( [Onboarded Users], [Total Signups] )
+
+W1 Retention Rate % =
+DIVIDE ( [Retained W1 Users], [Total Signups] )
+
+// Conversion of the single biggest leak (onboarding -> first post)
+Onboard To Post % =
+DIVIDE ( [Activated Users], [Onboarded Users] )
+
+// ---------- Engagement (events table) ----------
+Total Events = COUNTROWS ( pickspool_events )
+
+Total Picks =
+CALCULATE ( [Total Events], pickspool_events[action_type] = "pick" )
+
+Avg Reactions per Pick =
+CALCULATE (
+    AVERAGE ( pickspool_events[reactions_received] ),
+    pickspool_events[action_type] = "pick"
+)
+
+Picks per Active User =
+DIVIDE ( [Total Picks], [Activated Users] )
+
+// Evening share of activity (19:00-22:00)
+Evening Activity % =
+VAR Evening =
+    CALCULATE ( [Total Events],
+        pickspool_events[event_hour] >= 19,
+        pickspool_events[event_hour] <= 22 )
+RETURN DIVIDE ( Evening, [Total Events] )
+
+// ---------- Voter vs Browser retention ----------
+// (use user_segment slicer, or this explicit pair)
+Voter Retention % =
+CALCULATE ( [W1 Retention Rate % ],
+    pickspool_users[first_opinion_posted] = TRUE() )
+
+Browser Retention % =
+CALCULATE ( [W1 Retention Rate % ],
+    pickspool_users[onboarding_completed] = TRUE(),
+    pickspool_users[first_opinion_posted] = FALSE() )
+
+Voter vs Browser Lift =
+DIVIDE ( [Voter Retention %], [Browser Retention %] )
