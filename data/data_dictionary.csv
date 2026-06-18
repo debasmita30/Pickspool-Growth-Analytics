@@ -1,0 +1,28 @@
+table,column,description
+pickspool_users,user_id,Unique simulated user / waitlist signup ID
+pickspool_users,waitlist_signup_date,Date user joined the waitlist
+pickspool_users,acquisition_channel,referral / organic / influencer / app_store / social_ads
+pickspool_users,device,Android / iOS / Web
+pickspool_users,region,Metro / Tier 1 / Tier 2 / Tier 3
+pickspool_users,age_group,18-24 / 25-34 / 35-44 / 45+
+pickspool_users,onboarding_completed,TRUE if user finished onboarding (funnel stage 2)
+pickspool_users,onboarding_date,Date onboarding completed (blank if not)
+pickspool_users,first_opinion_posted,TRUE if user posted their first opinion/pick (stage 3)
+pickspool_users,first_post_date,Date of first opinion posted (blank if not)
+pickspool_users,active_week_1,TRUE if user active in their first week (stage 4 / retention)
+pickspool_users,user_segment,Derived: Dropped / Browser / Voter / Creator
+pickspool_users,engagement_propensity,Latent 0-1 simulated engagement score (model input; usually internal)
+pickspool_events,event_id,Unique event ID
+pickspool_events,user_id,FK -> pickspool_users.user_id
+pickspool_events,event_timestamp,Full timestamp of the action
+pickspool_events,event_date,Date of the action (for date hierarchy)
+pickspool_events,event_hour,Hour of day 0-23 (posting-time analysis)
+pickspool_events,day_of_week,Monday..Sunday
+pickspool_events,category,Opinion category the action belongs to
+pickspool_events,action_type,pick (cast opinion) / browse / react / comment / share
+pickspool_events,reactions_received,Reactions a pick/comment earned (engagement proxy)
+pickspool_events,session_id,Groups events into sessions
+pickspool_funnel_stages,funnel_stage,Named funnel stage
+pickspool_funnel_stages,users,Count of users reaching the stage
+pickspool_funnel_stages,pct_of_top,% of original waitlist reaching the stage
+pickspool_funnel_stages,step_conversion_pct,Conversion from the previous stage
