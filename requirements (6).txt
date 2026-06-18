@@ -1,7 +1,3 @@
-# Pickspool Growth Analytics Framework — dependencies
-# Install with:  pip install -r requirements.txt
-# Minimum versions kept conservative so it runs on Google Colab and locally.
-
 pandas>=2.0
 numpy>=1.24
 matplotlib>=3.7
